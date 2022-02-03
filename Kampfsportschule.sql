@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Host:                         127.0.0.1
--- Server Version:               10.4.19-MariaDB - mariadb.org binary distribution
+-- Server Version:               10.4.14-MariaDB - mariadb.org binary distribution
 -- Server Betriebssystem:        Win64
 -- HeidiSQL Version:             11.3.0.6295
 -- --------------------------------------------------------
@@ -13,11 +13,11 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 
--- Exportiere Datenbank Struktur für Kampfsportschule
+-- Exportiere Datenbank Struktur für kampfsportschule
 CREATE DATABASE IF NOT EXISTS `kampfsportschule` /*!40100 DEFAULT CHARACTER SET utf8mb4 */;
-USE `Kampfsportschule`;
+USE `kampfsportschule`;
 
--- Exportiere Struktur von Tabelle Kampfsportschule.erfahrung
+-- Exportiere Struktur von Tabelle kampfsportschule.erfahrung
 CREATE TABLE IF NOT EXISTS `erfahrung` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Erhaltungsdatum` date NOT NULL,
@@ -31,24 +31,20 @@ CREATE TABLE IF NOT EXISTS `erfahrung` (
   CONSTRAINT `FK_erfahrung_guertel` FOREIGN KEY (`Guertel_ID`) REFERENCES `guertel` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_erfahrung_person` FOREIGN KEY (`Personen_ID`) REFERENCES `person` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_erfahrung_stil` FOREIGN KEY (`Stil_ID`) REFERENCES `stil` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle Kampfsportschule.erfahrung: ~0 rows (ungefähr)
-/*!40000 ALTER TABLE `erfahrung` DISABLE KEYS */;
-/*!40000 ALTER TABLE `erfahrung` ENABLE KEYS */;
+-- Daten Export vom Benutzer nicht ausgewählt
 
--- Exportiere Struktur von Tabelle Kampfsportschule.guertel
+-- Exportiere Struktur von Tabelle kampfsportschule.guertel
 CREATE TABLE IF NOT EXISTS `guertel` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Farbe` varchar(50) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle Kampfsportschule.guertel: ~0 rows (ungefähr)
-/*!40000 ALTER TABLE `guertel` DISABLE KEYS */;
-/*!40000 ALTER TABLE `guertel` ENABLE KEYS */;
+-- Daten Export vom Benutzer nicht ausgewählt
 
--- Exportiere Struktur von Tabelle Kampfsportschule.person
+-- Exportiere Struktur von Tabelle kampfsportschule.person
 CREATE TABLE IF NOT EXISTS `person` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Vorname` varchar(50) NOT NULL,
@@ -56,24 +52,20 @@ CREATE TABLE IF NOT EXISTS `person` (
   `Geburtstag` date NOT NULL,
   `E-Mail` varchar(50) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle Kampfsportschule.person: ~0 rows (ungefähr)
-/*!40000 ALTER TABLE `person` DISABLE KEYS */;
-/*!40000 ALTER TABLE `person` ENABLE KEYS */;
+-- Daten Export vom Benutzer nicht ausgewählt
 
--- Exportiere Struktur von Tabelle Kampfsportschule.stil
+-- Exportiere Struktur von Tabelle kampfsportschule.stil
 CREATE TABLE IF NOT EXISTS `stil` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Stilbezeichnung` varchar(50) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle Kampfsportschule.stil: ~0 rows (ungefähr)
-/*!40000 ALTER TABLE `stil` DISABLE KEYS */;
-/*!40000 ALTER TABLE `stil` ENABLE KEYS */;
+-- Daten Export vom Benutzer nicht ausgewählt
 
--- Exportiere Struktur von Tabelle Kampfsportschule.training
+-- Exportiere Struktur von Tabelle kampfsportschule.training
 CREATE TABLE IF NOT EXISTS `training` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Personen_ID` int(11) NOT NULL,
@@ -87,9 +79,7 @@ CREATE TABLE IF NOT EXISTS `training` (
   CONSTRAINT `FK_training_stil` FOREIGN KEY (`Stil_ID`) REFERENCES `stil` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle Kampfsportschule.training: ~0 rows (ungefähr)
-/*!40000 ALTER TABLE `training` DISABLE KEYS */;
-/*!40000 ALTER TABLE `training` ENABLE KEYS */;
+-- Daten Export vom Benutzer nicht ausgewählt
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IFNULL(@OLD_FOREIGN_KEY_CHECKS, 1) */;
