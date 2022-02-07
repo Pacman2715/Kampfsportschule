@@ -276,20 +276,31 @@ switch ($params[0]) {
 
     case "admin":
         if ($params[1] == "addUser") {
-            function doEditUser($dbLink){
+            function doAddUser($dbLink){
                 $url = $_GET['url'];
                 $params = explode("/",$url);
-                $query = "INSERT INTO `kampfsportschule`.`person` (`Vorname`,`Nachname`,`Geburtstag`,`E-Mail`) VALUES ('".$params[2]."','".$params[3]."','".$params[4]."','".$params[5]."');";
-                if ($dbLink->query($query) === TRUE) {
-                    return true;
-                } else {
-                    echo "Error: " . $query . "<br>" . $dbLink->error;
-                return false;
+                
+                $query ="SELECT * FROM person WHERE Vorname =('".$params[2]."') AND Nachname = ('".$params[3]."') AND Geburtstag = ('".$params[4]."') AND EMail = ('".$params[5]."');";
+                $result = mysqli_query($dbLink, $query);
+                $checkID=null;
+                while($row=$result->fetch_assoc()){
+                        $checkID = $row['ID'];
+                } 
+                if($checkID==null){
+                   $query = "INSERT INTO `kampfsportschule`.`person` (`Vorname`,`Nachname`,`Geburtstag`,`EMail`) VALUES ('".$params[2]."','".$params[3]."','".$params[4]."','".$params[5]."');";
+                    if ($dbLink->query($query) === TRUE) {
+                        return true;
+                    } else {
+                        echo "Error: " . $query . "<br>" . $dbLink->error;
+                    return false;
+                    } 
+                }else{
+                    return false;
                 }
             }
-            $editUser = doEditUser($dbLink);
+            $editUser = doAddUser($dbLink);
             $resultJson = [
-                "Nenutzeranpassungen"=>$editUser,
+                "Neuen Benutzer hinzufügen"=>$editUser,
                 "url"=>$url,
                 "params"=>$params
             ];
@@ -297,7 +308,7 @@ switch ($params[0]) {
             #Setzen von name vorname gb.datum und Email nötig.
         } else if ($params[1] == "delUser") {
             
-            function doEditUser($dbLink){
+            function doDelUser($dbLink){
                 $url = $_GET['url'];
                 $params = explode("/",$url);
                 $query = "DELETE FROM `kampfsportschule`.`person` WHERE  `ID`='".$params[2]."';";
@@ -308,9 +319,9 @@ switch ($params[0]) {
                 return false;
                 }
             }
-            $editUser = doEditUser($dbLink);
+            $editUser = doDelUser($dbLink);
             $resultJson = [
-                "Nenutzeranpassungen"=>$editUser,
+                "Löschen eines Benutzers"=>$editUser,
                 "url"=>$url,
                 "params"=>$params
             ];
