@@ -31,14 +31,53 @@ CREATE TABLE IF NOT EXISTS `erfahrung` (
   CONSTRAINT `FK_erfahrung_guertel` FOREIGN KEY (`Guertel_ID`) REFERENCES `guertel` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_erfahrung_person` FOREIGN KEY (`Personen_ID`) REFERENCES `person` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_erfahrung_stil` FOREIGN KEY (`Stil_ID`) REFERENCES `stil` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.erfahrung: ~2 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.erfahrung: ~3 rows (ungefähr)
 /*!40000 ALTER TABLE `erfahrung` DISABLE KEYS */;
 INSERT INTO `erfahrung` (`ID`, `Erhaltungsdatum`, `Personen_ID`, `Stil_ID`, `Guertel_ID`) VALUES
 	(3, '2011-05-06', 1, 1, 2),
-	(4, '2022-01-27', 3, 4, 3);
+	(4, '2022-01-27', 3, 4, 3),
+	(6, '2022-01-02', 2, 3, 2),
+	(7, '2021-03-03', 1, 3, 5);
 /*!40000 ALTER TABLE `erfahrung` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle kampfsportschule.examen
+CREATE TABLE IF NOT EXISTS `examen` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `exambezeichnung_ID` int(11) NOT NULL,
+  `Zeitpunkt` datetime NOT NULL,
+  `Länge` int(11) NOT NULL,
+  PRIMARY KEY (`ID`),
+  KEY `FK_examen_examen_bezeichnung` (`exambezeichnung_ID`),
+  CONSTRAINT `FK_examen_examen_bezeichnung` FOREIGN KEY (`exambezeichnung_ID`) REFERENCES `examen_bezeichnung` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB AUTO_INCREMENT=66 DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle kampfsportschule.examen: ~6 rows (ungefähr)
+/*!40000 ALTER TABLE `examen` DISABLE KEYS */;
+INSERT INTO `examen` (`ID`, `exambezeichnung_ID`, `Zeitpunkt`, `Länge`) VALUES
+	(14, 22, '2022-02-02 09:00:00', 3),
+	(16, 24, '2022-02-02 09:00:00', 3),
+	(62, 24, '2022-02-02 09:15:00', 3),
+	(63, 22, '2022-02-02 09:15:00', 3),
+	(64, 22, '2022-02-03 09:15:00', 3),
+	(65, 37, '2022-02-03 09:15:00', 3);
+/*!40000 ALTER TABLE `examen` ENABLE KEYS */;
+
+-- Exportiere Struktur von Tabelle kampfsportschule.examen_bezeichnung
+CREATE TABLE IF NOT EXISTS `examen_bezeichnung` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `Examenbezeichnung` varchar(50) NOT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle kampfsportschule.examen_bezeichnung: ~3 rows (ungefähr)
+/*!40000 ALTER TABLE `examen_bezeichnung` DISABLE KEYS */;
+INSERT INTO `examen_bezeichnung` (`ID`, `Examenbezeichnung`) VALUES
+	(22, 'Erstehilfekurs'),
+	(24, 'Karate'),
+	(37, 'Judo');
+/*!40000 ALTER TABLE `examen_bezeichnung` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle kampfsportschule.guertel
 CREATE TABLE IF NOT EXISTS `guertel` (
@@ -68,7 +107,7 @@ CREATE TABLE IF NOT EXISTS `person` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.person: ~2 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.person: ~5 rows (ungefähr)
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
 INSERT INTO `person` (`ID`, `Vorname`, `Nachname`, `Geburtstag`, `E-Mail`) VALUES
 	(1, 'Bente', 'Kalvelage', '1999-11-06', 'test@email.com'),
@@ -77,14 +116,35 @@ INSERT INTO `person` (`ID`, `Vorname`, `Nachname`, `Geburtstag`, `E-Mail`) VALUE
 	(6, 'Max', 'Mustermann', '1990-05-16', 'mustermann@email.com');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 
+-- Exportiere Struktur von Tabelle kampfsportschule.personen_examen
+CREATE TABLE IF NOT EXISTS `personen_examen` (
+  `personen_ID` int(11) NOT NULL,
+  `examen_ID` int(11) NOT NULL,
+  KEY `FK_personen_examen_person` (`personen_ID`),
+  KEY `FK_personen_examen_examen` (`examen_ID`),
+  CONSTRAINT `FK_personen_examen_examen` FOREIGN KEY (`examen_ID`) REFERENCES `examen` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  CONSTRAINT `FK_personen_examen_person` FOREIGN KEY (`personen_ID`) REFERENCES `person` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Exportiere Daten aus Tabelle kampfsportschule.personen_examen: ~6 rows (ungefähr)
+/*!40000 ALTER TABLE `personen_examen` DISABLE KEYS */;
+INSERT INTO `personen_examen` (`personen_ID`, `examen_ID`) VALUES
+	(1, 14),
+	(1, 16),
+	(1, 62),
+	(1, 63),
+	(3, 64),
+	(3, 65);
+/*!40000 ALTER TABLE `personen_examen` ENABLE KEYS */;
+
 -- Exportiere Struktur von Tabelle kampfsportschule.stil
 CREATE TABLE IF NOT EXISTS `stil` (
   `ID` int(11) NOT NULL AUTO_INCREMENT,
   `Stilbezeichnung` varchar(50) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.stil: ~4 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.stil: ~5 rows (ungefähr)
 /*!40000 ALTER TABLE `stil` DISABLE KEYS */;
 INSERT INTO `stil` (`ID`, `Stilbezeichnung`) VALUES
 	(1, 'Karate'),
@@ -106,9 +166,9 @@ CREATE TABLE IF NOT EXISTS `training` (
   KEY `FK_training_stil` (`Stil_ID`),
   CONSTRAINT `FK_training_person` FOREIGN KEY (`Personen_ID`) REFERENCES `person` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_training_stil` FOREIGN KEY (`Stil_ID`) REFERENCES `stil` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.training: ~1 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.training: ~10 rows (ungefähr)
 /*!40000 ALTER TABLE `training` DISABLE KEYS */;
 INSERT INTO `training` (`ID`, `Personen_ID`, `Zeit`, `Start/Stop`, `Stil_ID`) VALUES
 	(2, 1, '2022-02-03 12:26:01', 'Start', 1),
@@ -119,7 +179,10 @@ INSERT INTO `training` (`ID`, `Personen_ID`, `Zeit`, `Start/Stop`, `Stil_ID`) VA
 	(7, 1, '0000-00-00 00:00:00', 'Stop', 3),
 	(8, 1, '2022-02-04 08:18:53', 'Stop', 3),
 	(9, 3, '2022-02-04 08:53:59', 'Start', 2),
-	(10, 3, '2022-02-04 08:54:26', 'Stop', 2);
+	(10, 3, '2022-02-04 08:54:26', 'Stop', 2),
+	(12, 1, '2022-02-06 03:47:35', 'Start', 2),
+	(13, 1, '2022-02-06 03:53:07', 'Stop', 2),
+	(15, 2, '2022-02-07 12:45:56', 'Stop', 1);
 /*!40000 ALTER TABLE `training` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
