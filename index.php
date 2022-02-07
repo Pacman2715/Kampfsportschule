@@ -69,18 +69,76 @@ switch ($params[0]) {
                 
                     $url = $_GET['url'];
                     $params = explode("/",$url);
-                    $query = "INSERT INTO `kampfsportschule`.`erfahrung` (`Erhaltungsdatum`,`Personen_ID`,`Stil_ID`,`Guertel_ID`) VALUES ('".$params[3]."','".$params[1]."','".$params[4]."','".$params[5]."');";
-                    if ($dbLink->query($query) === TRUE) {
-                        return true;
-                    } else {
-                        echo "Error: " . $query . "<br>" . $dbLink->error;
-                    return false;
+                    
+                    
+                    $query ="SELECT * FROM examen_bezeichnung WHERE Examenbezeichnung =('".$params[3]."')";
+                    $result = mysqli_query($dbLink, $query);
+                    $id_examenbezeichnung=null;
+                    while($row=$result->fetch_assoc()){
+                            $id_examenbezeichnung = $row['ID'];
                     }
-                
+
+                    if($id_examenbezeichnung == null){
+                        $query = "INSERT INTO `kampfsportschule`.`examen_bezeichnung` (`Examenbezeichnung`) VALUES ('".$params[3]."');";
+                        if ($dbLink->query($query) === TRUE) {
+
+                        } else {
+                            echo "Error: " . $query . "<br>" . $dbLink->error;
+                            return false;
+                        }
+                        
+                        $query ="SELECT * FROM examen_bezeichnung WHERE Examenbezeichnung =('".$params[3]."')";
+                        $result = mysqli_query($dbLink, $query);
+                        while($row=$result->fetch_assoc()){
+                            //echo "<option value='".$row['ID']."'>".$row['Vorname']."</option>";
+                            $id_examenbezeichnung = $row['ID'];
+                        }
+                    }
+                    
+                    $query ="SELECT * FROM examen WHERE exambezeichnung_ID =('".$id_examenbezeichnung."') AND Zeitpunkt = ('".$params[4]."') AND Länge = ('".$params[5]."');";
+                    $result = mysqli_query($dbLink, $query);
+                    $id_examen=null;
+                    while($row=$result->fetch_assoc()){
+                            $id_examen = $row['ID'];
+                    }                    
+                    
+                    if($id_examen==null){
+                        $query = "INSERT INTO `kampfsportschule`.`examen` (`exambezeichnung_ID`,`Zeitpunkt`,`Länge`) VALUES ('".$id_examenbezeichnung."','".$params[4]."','".$params[5]."');";
+                        if ($dbLink->query($query) === TRUE) {
+                        } else {
+                            echo "Error: " . $query . "<br>" . $dbLink->error;
+                            return false;
+                        }
+                        $query ="SELECT * FROM examen WHERE exambezeichnung_ID =('".$id_examenbezeichnung."') AND Zeitpunkt = ('".$params[4]."') AND Länge = ('".$params[5]."');";
+                        $result = mysqli_query($dbLink, $query);
+                        while($row=$result->fetch_assoc()){
+                            //echo "<option value='".$row['ID']."'>".$row['Vorname']."</option>";
+                            $id_examen = $row['ID'];
+                        }
+                    }
+                            
+                    $query ="SELECT * FROM personen_examen WHERE personen_ID =('".$params[1]."') AND examen_ID = ('".$id_examen."');";
+                    $result = mysqli_query($dbLink, $query);
+                    $checkPersonenID=null;
+                    $checkExamenID=null;
+                    while($row=$result->fetch_assoc()){
+                        $checkPersonenID= $row['personen_ID'];
+                        $checkExamenID= $row['examen_ID'];
+                    }
+                    
+                    if($checkPersonenID==null && $checkExamenID==null){
+                        $query = "INSERT INTO `kampfsportschule`.`personen_examen` (`personen_ID`, `examen_ID`) VALUES ('".$params[1]."','".$id_examen."');";
+                        if ($dbLink->query($query) === TRUE) {
+                            return true;
+                        } else {
+                            echo "Error: " . $query . "<br>" . $dbLink->error;
+                            return false;
+                        }
+                    }
                 }
                 $datenbankeintrag = doSetExamSeminar($dbLink);
                 $resultJson = [
-                    "Eine neue Erfahrungsstufe wurde hinzugefügt: "=>$datenbankeintrag,
+                    "Der Eintrag für das Seminar wurde gesetzt"=>$datenbankeintrag,
                     "url"=>$url,
                     "params"=>$params
                 ];
@@ -103,25 +161,23 @@ switch ($params[0]) {
 
                     $query ="SELECT * FROM erfahrung WHERE Personen_ID =('".$params[1]."')";
                     $result = mysqli_query($dbLink, $query);
+                    $i=0;
                     while($row=$result->fetch_assoc()){
-                        //echo "<option value='".$row['ID']."'>".$row['Vorname']."</option>";
-                        $erfErhaltungsdatum = $row['Erhaltungsdatum'];
-                        $erfStil = $row['Stil_ID'];
+                        $erfErhaltungsdatum[$i] = $row['Erhaltungsdatum'];
                         $erfGuertel = $row['Guertel_ID'];
-                    }
-
-                    $query ="SELECT * FROM stil WHERE ID =('".$erfStil."')";
-                    $result = mysqli_query($dbLink, $query);
-                    while($row=$result->fetch_assoc()){
-                        //echo "<option value='".$row['ID']."'>".$row['Vorname']."</option>";
-                        $stilBeschreibung = $row['Stilbezeichnung'];
-                    }
-
-                    $query ="SELECT * FROM guertel WHERE ID =('".$erfGuertel."')";
-                    $result = mysqli_query($dbLink, $query);
-                    while($row=$result->fetch_assoc()){
-                        //echo "<option value='".$row['ID']."'>".$row['Vorname']."</option>";
-                        $guertelFarbe = $row['Farbe'];
+                            $query ="SELECT * FROM guertel WHERE ID =('".$erfGuertel."')";
+                            $resultErfGuertel = mysqli_query($dbLink, $query);
+                            while($rowFarbe=$resultErfGuertel->fetch_assoc()){
+                                $guertelFarbe[$i] = $rowFarbe['Farbe'];
+                            }
+                        $erfStil = $row['Stil_ID'];
+                            $query ="SELECT * FROM stil WHERE ID =('".$erfStil."')";
+                            $resultErfStil = mysqli_query($dbLink, $query);
+                            while($rowStil=$resultErfStil->fetch_assoc()){
+                                $stilBeschreibung[$i] = $rowStil['Stilbezeichnung'];
+                            }
+                        
+                        $i++;
                     }
 
                     return array($id, $vorname, $nachname, $geburtstag, $email, $erfErhaltungsdatum, $stilBeschreibung, $guertelFarbe);  
@@ -149,19 +205,20 @@ switch ($params[0]) {
 
     case "training":
         if ($params[2] == "getStatistics") {
-            
+
             function doGetStatisticsTraining($dbLink){
                 $url = $_GET['url'];
                 $params = explode("/",$url);
                 $query ="SELECT * FROM training WHERE Stil_ID =('".$params[1]."') AND personen_ID = ('".$params[3]."')";
                 $result = mysqli_query($dbLink, $query);
+                $i=0;
                 while($row=$result->fetch_assoc()){
                     //echo "<option value='".$row['ID']."'>".$row['Vorname']."</option>";
-                    $zeit = $row['Zeit'];
-                    $startStop = $row['Start/Stop'];
+                    $zeit[$i] = $row['Zeit'];
+                    $startStop[$i] = $row['Start/Stop'];
                     $personenID = $row['Personen_ID'];
+                    $i++;
                 }
-                
                 $query ="SELECT * FROM person WHERE id =('".$personenID."')";
                 $result = mysqli_query($dbLink, $query);
                 while($row=$result->fetch_assoc()){
@@ -169,9 +226,6 @@ switch ($params[0]) {
                     $vorname = $row['Vorname'];
                     $nachname = $row['Nachname'];
                 }
-
-                
-                
                 $query ="SELECT * FROM stil WHERE id =('".$params[1]."')";
                 $result = mysqli_query($dbLink, $query);
                 while($row=$result->fetch_assoc()){
@@ -181,13 +235,14 @@ switch ($params[0]) {
                 return array($zeit, $startStop, $stilbezeichnung, $vorname, $nachname);
             }
             
+
             list($zeit, $startStop, $stilbezeichnung, $vorname, $nachname) = doGetStatisticsTraining($dbLink);
                 $resultJson = [
-                    "Trainingsstil"=>$stilbezeichnung,
-                    "Training am: "=>$zeit,
-                    ""=>$startStop,
                     "Vorname"=>$vorname,
                     "Nachname"=>$nachname,
+                    "Trainingsstil"=>$stilbezeichnung,
+                    "Training am"=>$zeit,
+                    "Eigenschaft"=>$startStop,
                     "url"=>$url,
                     "params"=>$params
                 ];
