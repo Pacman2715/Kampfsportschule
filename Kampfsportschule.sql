@@ -103,17 +103,18 @@ CREATE TABLE IF NOT EXISTS `person` (
   `Vorname` varchar(50) NOT NULL,
   `Nachname` varchar(50) NOT NULL,
   `Geburtstag` date NOT NULL,
-  `E-Mail` varchar(50) NOT NULL,
+  `EMail` varchar(50) NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.person: ~5 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.person: ~6 rows (ungefähr)
 /*!40000 ALTER TABLE `person` DISABLE KEYS */;
-INSERT INTO `person` (`ID`, `Vorname`, `Nachname`, `Geburtstag`, `E-Mail`) VALUES
+INSERT INTO `person` (`ID`, `Vorname`, `Nachname`, `Geburtstag`, `EMail`) VALUES
 	(1, 'Bente', 'Kalvelage', '1999-11-06', 'test@email.com'),
 	(2, 'Thomas', 'Lechner', '2010-01-27', 'testmail@mustermann.de'),
 	(3, 'Christian', 'Gausmann', '2012-12-01', 'mustermann@testmail.net'),
-	(6, 'Max', 'Mustermann', '1990-05-16', 'mustermann@email.com');
+	(6, 'Max', 'Mustermann', '1990-05-16', 'mustermann@email.com'),
+	(15, 'Ute', 'Mustermann', '2010-03-24', 'musterfrau@email.com');
 /*!40000 ALTER TABLE `person` ENABLE KEYS */;
 
 -- Exportiere Struktur von Tabelle kampfsportschule.personen_examen
