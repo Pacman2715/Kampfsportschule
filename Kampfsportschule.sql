@@ -53,7 +53,7 @@ CREATE TABLE IF NOT EXISTS `examen` (
   CONSTRAINT `FK_examen_examen_bezeichnung` FOREIGN KEY (`exambezeichnung_ID`) REFERENCES `examen_bezeichnung` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.examen: ~7 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.examen: ~6 rows (ungefähr)
 /*!40000 ALTER TABLE `examen` DISABLE KEYS */;
 INSERT INTO `examen` (`ID`, `exambezeichnung_ID`, `Zeitpunkt`, `Länge`) VALUES
 	(14, 22, '2022-02-02 09:00:00', 3),
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `examen_bezeichnung` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=39 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.examen_bezeichnung: ~4 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.examen_bezeichnung: ~3 rows (ungefähr)
 /*!40000 ALTER TABLE `examen_bezeichnung` DISABLE KEYS */;
 INSERT INTO `examen_bezeichnung` (`ID`, `Examenbezeichnung`) VALUES
 	(22, 'Erstehilfekurs'),
@@ -131,7 +131,7 @@ CREATE TABLE IF NOT EXISTS `personen_examen` (
   CONSTRAINT `FK_personen_examen_person` FOREIGN KEY (`personen_ID`) REFERENCES `person` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.personen_examen: ~7 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.personen_examen: ~6 rows (ungefähr)
 /*!40000 ALTER TABLE `personen_examen` DISABLE KEYS */;
 INSERT INTO `personen_examen` (`personen_ID`, `examen_ID`) VALUES
 	(1, 14),
@@ -172,9 +172,9 @@ CREATE TABLE IF NOT EXISTS `training` (
   KEY `FK_training_stil` (`Stil_ID`),
   CONSTRAINT `FK_training_person` FOREIGN KEY (`Personen_ID`) REFERENCES `person` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_training_stil` FOREIGN KEY (`Stil_ID`) REFERENCES `stil` (`ID`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4;
 
--- Exportiere Daten aus Tabelle kampfsportschule.training: ~15 rows (ungefähr)
+-- Exportiere Daten aus Tabelle kampfsportschule.training: ~27 rows (ungefähr)
 /*!40000 ALTER TABLE `training` DISABLE KEYS */;
 INSERT INTO `training` (`ID`, `Personen_ID`, `Zeit`, `Start/Stop`, `Stil_ID`) VALUES
 	(2, 1, '2022-02-03 12:26:01', 'Start', 1),
@@ -204,7 +204,11 @@ INSERT INTO `training` (`ID`, `Personen_ID`, `Zeit`, `Start/Stop`, `Stil_ID`) VA
 	(28, 1, '2022-02-08 02:18:21', 'Start', 2),
 	(29, 2, '2022-02-08 02:18:27', 'Start', 2),
 	(30, 2, '2022-02-08 02:18:34', 'Stop', 2),
-	(31, 1, '2022-02-08 02:18:48', 'Stop', 2);
+	(31, 1, '2022-02-08 02:18:48', 'Stop', 2),
+	(32, 1, '2022-02-08 02:22:07', 'Start', 3),
+	(33, 1, '2022-02-08 02:22:44', 'Stop', 3),
+	(34, 1, '2022-02-08 02:49:34', 'Start', 2),
+	(35, 1, '2022-02-08 02:49:40', 'Stop', 2);
 /*!40000 ALTER TABLE `training` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
