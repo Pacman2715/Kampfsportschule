@@ -4,6 +4,21 @@
  */
 header("Content-Type: application/json;charset=utf-8");
 
+$valid_passwords = array ("Thomas" => "Wit3A", "Bente" => "Wit3A", "Christian" => "Wit3A", "Smit" => "Wit3A");
+$valid_users = array_keys($valid_passwords);
+
+$user = $_SERVER['PHP_AUTH_USER'];
+$pass = $_SERVER['PHP_AUTH_PW'];
+
+$validated = (in_array($user, $valid_users)) && ($pass == $valid_passwords[$user]);
+
+if (!$validated) {
+  header('WWW-Authenticate: Basic realm="My Realm"');
+  header('HTTP/1.0 401 Unauthorized');
+  die ("Not authorized");
+}
+// If arrives here, is a valid user.
+
 $url = $_GET['url'];
 $params = explode("/",$url);
 //require './functions/dbFunctions.php';
