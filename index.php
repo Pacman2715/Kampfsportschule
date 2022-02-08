@@ -26,13 +26,27 @@ switch ($params[0]) {
                     $url = $_GET['url'];
                     $params = explode("/",$url);
                     $currentDateAndTime = date('Y-m-d h:i:s', time());  
-                    $query = "INSERT INTO `kampfsportschule`.`training` (`Personen_ID`,`Zeit`,`Start/Stop`,`Stil_ID`) VALUES ('".$params[1]."','".$currentDateAndTime."','Start','".$params[3]."');";
-                    if ($dbLink->query($query) === TRUE) {
-                        return $currentDateAndTime;
-                    } else {
-                        echo "Error: " . $query . "<br>" . $dbLink->error;
-                    return false;
-                    }  
+                    
+                    $query ="SELECT * FROM training WHERE Personen_ID =('".$params[1]."');";
+                    $result = mysqli_query($dbLink, $query);
+                    $i=0;
+                    while($row=$result->fetch_assoc()){
+                            $checkStartStop[$i]= $row['Start/Stop'];
+                            $i++;
+                    }
+                    $i=$i-1;
+                    if($checkStartStop[$i]=="Stop"){
+                        $query = "INSERT INTO `kampfsportschule`.`training` (`Personen_ID`,`Zeit`,`Start/Stop`,`Stil_ID`) VALUES ('".$params[1]."','".$currentDateAndTime."','Start','".$params[3]."');";
+                        if ($dbLink->query($query) === TRUE) {
+                            return $currentDateAndTime;
+                        } else {
+                            echo "Error: " . $query . "<br>" . $dbLink->error;
+                        return false;
+                        } 
+                    }else{
+                        return false;
+                    }
+                    
                 }
                 $datenbankeintrag = doTrainingStart($dbLink);
                 $resultJson = [
@@ -46,13 +60,26 @@ switch ($params[0]) {
                 function doTrainingEnd($dbLink){
                     $url = $_GET['url'];
                     $params = explode("/",$url);
-                    $currentDateAndTime = date('Y-m-d h:i:s', time());  
-                    $query = "INSERT INTO `kampfsportschule`.`training` (`Personen_ID`,`Zeit`,`Start/Stop`,`Stil_ID`) VALUES ('".$params[1]."','".$currentDateAndTime."','Stop','".$params[3]."');";
-                    if ($dbLink->query($query) === TRUE) {
-                        return $currentDateAndTime;
-                    } else {
-                        echo "Error: " . $query . "<br>" . $dbLink->error;
-                    return false;
+                    $currentDateAndTime = date('Y-m-d h:i:s', time()); 
+                    
+                    $query ="SELECT * FROM training WHERE Personen_ID =('".$params[1]."') AND Stil_ID = ('".$params[3]."');";
+                    $result = mysqli_query($dbLink, $query);
+                    $i=0;
+                    while($row=$result->fetch_assoc()){
+                            $checkStartStop[$i]= $row['Start/Stop'];
+                            $i++;
+                    }
+                    $i=$i-1;
+                    if($checkStartStop[$i]=="Start"){
+                        $query = "INSERT INTO `kampfsportschule`.`training` (`Personen_ID`,`Zeit`,`Start/Stop`,`Stil_ID`) VALUES ('".$params[1]."','".$currentDateAndTime."','Stop','".$params[3]."');";
+                        if ($dbLink->query($query) === TRUE) {
+                            return $currentDateAndTime;
+                        } else {
+                            echo "Error: " . $query . "<br>" . $dbLink->error;
+                        return false;
+                        }
+                    }else{
+                        return false;
                     }
                 }
                 $datenbankeintrag = doTrainingEnd($dbLink);
@@ -134,6 +161,8 @@ switch ($params[0]) {
                             echo "Error: " . $query . "<br>" . $dbLink->error;
                             return false;
                         }
+                    }else{
+                        return false;
                     }
                 }
                 $datenbankeintrag = doSetExamSeminar($dbLink);
@@ -253,12 +282,23 @@ switch ($params[0]) {
             function doSetTrainingType($dbLink){
                 $url = $_GET['url'];
                 $params = explode("/",$url);
-                $query = "INSERT INTO `kampfsportschule`.`stil` (`Stilbezeichnung`) VALUES ('".$params[2]."');";
-                if ($dbLink->query($query) === TRUE) {
-                    return $newTrainingType = $params[2];
-                } else {
-                    echo "Error: " . $query . "<br>" . $dbLink->error;
-                return false;
+                $query ="SELECT * FROM stil WHERE Stilbezeichnung =('".$params[2]."')";
+                $result = mysqli_query($dbLink, $query);
+                $checkID=null;
+                while($row=$result->fetch_assoc()){
+                    //echo "<option value='".$row['ID']."'>".$row['Vorname']."</option>";
+                    $checkID = $row['ID'];
+                }
+                if($checkID==null){
+                   $query = "INSERT INTO `kampfsportschule`.`stil` (`Stilbezeichnung`) VALUES ('".$params[2]."');";
+                    if ($dbLink->query($query) === TRUE) {
+                        return true;
+                    } else {
+                        echo "Error: " . $query . "<br>" . $dbLink->error;
+                    return false;
+                    } 
+                }else{
+                    return false;
                 }
             }
             $newTrainingType=doSetTrainingType($dbLink);
