@@ -156,7 +156,7 @@ switch ($params[0]) {
                         $vorname = $row['Vorname'];
                         $nachname = $row['Nachname'];
                         $geburtstag = $row['Geburtstag'];
-                        $email = $row['E-Mail'];
+                        $email = $row['EMail'];
                     }
 
                     $query ="SELECT * FROM erfahrung WHERE Personen_ID =('".$params[1]."')";
@@ -280,13 +280,19 @@ switch ($params[0]) {
                 $url = $_GET['url'];
                 $params = explode("/",$url);
                 
-                $query ="SELECT * FROM person WHERE Vorname =('".$params[2]."') AND Nachname = ('".$params[3]."') AND Geburtstag = ('".$params[4]."') AND EMail = ('".$params[5]."');";
+                $query ="SELECT * FROM person WHERE Vorname =('".$params[2]."') AND Nachname = ('".$params[3]."') AND Geburtstag = ('".$params[4]."');";
                 $result = mysqli_query($dbLink, $query);
                 $checkID=null;
                 while($row=$result->fetch_assoc()){
                         $checkID = $row['ID'];
                 } 
-                if($checkID==null){
+                $query ="SELECT * FROM person WHERE EMail = ('".$params[5]."');";
+                $result = mysqli_query($dbLink, $query);
+                $checkMail=null;
+                while($row=$result->fetch_assoc()){
+                        $checkMail = $row['EMail'];
+                }
+                if($checkID==null && $checkMail==null || $checkID!=null && $checkMail==null){
                    $query = "INSERT INTO `kampfsportschule`.`person` (`Vorname`,`Nachname`,`Geburtstag`,`EMail`) VALUES ('".$params[2]."','".$params[3]."','".$params[4]."','".$params[5]."');";
                     if ($dbLink->query($query) === TRUE) {
                         return true;
